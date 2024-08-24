@@ -1,0 +1,215 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1> My To-Do List</h1>
+        <input type="text" id="new-task" placeholder="Add a new task">
+        <button id="add-task">Add Task</button>
+        <div class="filters">
+            <button data-filter="all">All</button>
+            <button data-filter="completed">Completed</button>
+            <button data-filter="pending">Pending</button>
+        </div>
+        <ul id="task-list"></ul>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Basics Assessment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        p#result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Task 1: Simple Calculator -->
+    <div class="container">
+        <h1>Simple Calculator</h1>
+        <form id="calculator-form">
+            <input type="number" id="num1" placeholder="Enter first number" required>
+            <input type="number" id="num2" placeholder="Enter second number" required>
+            <select id="operator">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value=""></option>
+                <option value="/">/</option>
+            </select>
+            <button type="button" onclick="calculate()">Calculate</button>
+        </form>
+        <p id="result"></p>
+    </div>
+
+    <!-- Task 2: Array Operations -->
+    <div class="container">
+        <h1>Sum of Even Numbers</h1>
+        <input type="text" id="arrayInput" placeholder="Enter numbers separated by commas">
+        <button type="button" onclick="calculateSumOfEvens()">Calculate Sum</button>
+        <p id="sumResult"></p>
+    </div>
+
+    <!-- Task 3: Object Manipulation -->
+    <div class="container">
+        <h1>Person Object</h1>
+        <form id="person-form">
+            <input type="text" id="firstName" placeholder="Enter first name" required>
+            <input type="text" id="lastName" placeholder="Enter last name" required>
+            <input type="number" id="age" placeholder="Enter age" required>
+            <button type="button" onclick="createPerson()">Create Person</button>
+        </form>
+        <p id="personInfo"></p>
+        <button type="button" onclick="incrementPersonAge()">Increment Age</button>
+    </div>
+
+    <script>
+        // Task 1: Simple Calculator
+        function calculate() {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            const operator = document.getElementById('operator').value;
+            
+            let result;
+
+            switch (operator) {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    if (num2 !== 0) {
+                        result = num1 / num2;
+                    } else {
+                        result = 'Error: Division by zero is not allowed.';
+                    }
+                    break;
+                default:
+                    result = 'Error: Invalid operator.';
+            }
+
+            document.getElementById('result').textContent = `Result: ${result}`;
+        }
+
+        // Task 2: Array Operations
+        function calculateSumOfEvens() {
+            const input = document.getElementById('arrayInput').value;
+            const arr = input.split(',').map(Number);
+
+            let sum = 0;
+
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] % 2 === 0) {
+                    sum += arr[i];
+                }
+            }
+
+            document.getElementById('sumResult').textContent = `Sum of Even Numbers: ${sum}`;
+        }
+
+        // Task 3: Object Manipulation
+        let Person;
+
+        function createPerson() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const age = parseInt(document.getElementById('age').value);
+
+            Person = {
+                firstName: firstName,
+                lastName: lastName,
+                age: age,
+                getFullName: function() {
+                    return `${this.firstName} ${this.lastName}`;
+                },
+                incrementAge: function() {
+                    this.age++;
+                }
+            };
+
+            updatePersonInfo();
+        }
+
+        function incrementPersonAge() {
+            if (Person) {
+                Person.incrementAge();
+                updatePersonInfo();
+            } else {
+                alert("Please create a person first.");
+            }
+        }
+
+        function updatePersonInfo() {
+            if (Person) {
+                const personInfo = `Name: ${Person.getFullName()}<br>Age: ${Person.age}`;
+                document.getElementById('personInfo').innerHTML = personInfo;
+            }
+        }
+    </script>
+
+</body>
+</html>
