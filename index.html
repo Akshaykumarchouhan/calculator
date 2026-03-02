@@ -1,99 +1,146 @@
-<!-- Create a simple Program to build the Calculator in JavaScript using with HTML and CSS web languages. -->
 <!DOCTYPE html>
-<html lang = "en">
+<html lang="en" data-theme="dark">
+
 <head>
-<title> JavaScript Calculator </title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Scientific Calculator</title>
+  <meta name="description" content="A robust, accessible, offline-capable scientific calculator.">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e1e24">
+  <link rel="stylesheet" href="styles.css">
 
-<style>
-h1 {
-	text-align: center;
-	padding: 23px;
-	background-color: skyblue;
-	color: white;
-	}
-
-#clear{
-width: 270px;
-border: 3px solid gray;
-	border-radius: 3px;
-	padding: 20px;
-	background-color: red;
-}
-
-.formstyle
-{
-width: 300px;
-height: 530px;
-margin: auto;
-border: 3px solid skyblue;
-border-radius: 5px;
-padding: 20px;
-}
-
-
-
-input
-{
-width: 20px;
-background-color: rgb(179, 38, 158);
-color: white;
-border: 3px solid blue;
-	border-radius: 5px;
-	padding: 26px;
-	margin: 5px;
-	font-size: 15px;
-}
-
-
-#calc{
-width: 250px;
-border: 5px solid black;
-	border-radius: 3px;
-	padding: 20px;
-	margin: auto;
-}
-
-</style>
-
+  <!-- Icons -->
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
 </head>
-<body> </h1>
-<div class= "formstyle">
-<form name = "form1">
-	
-	<!-- This input box shows the button pressed by the user in calculator. -->
-  <input id = "calc" type ="text" name = "answer"> <br> <br>
-  <!-- Display the calculator button on the screen. -->
-  <!-- onclick() function display the number prsses by the user. -->
-  <input type = "button" value = "1" onclick = "form1.answer.value += '1' ">
-  <input type = "button" value = "2" onclick = "form1.answer.value += '2' ">
-  <input type = "button" value = "3" onclick = "form1.answer.value += '3' ">
-   <input type = "button" value = "+" onclick = "form1.answer.value += '+' ">
-  <br> <br>
-  
-  <input type = "button" value = "4" onclick = "form1.answer.value += '4' ">
-  <input type = "button" value = "5" onclick = "form1.answer.value += '5' ">
-  <input type = "button" value = "6" onclick = "form1.answer.value += '6' ">
-  <input type = "button" value = "-" onclick = "form1.answer.value += '-' ">
-  <br> <br>
-  
-  <input type = "button" value = "7" onclick = "form1.answer.value += '7' ">
-  <input type = "button" value = "8" onclick = "form1.answer.value += '8' ">
-  <input type = "button" value = "9" onclick = "form1.answer.value += '9' ">
-  <input type = "button" value = "" onclick = "form1.answer.value += '' ">
-  <br> <br>
-  
-  
-  <input type = "button" value = "/" onclick = "form1.answer.value += '/' ">
-  <input type = "button" value = "0" onclick = "form1.answer.value += '0' ">
-    <input type = "button" value = "." onclick = "form1.answer.value += '.' ">
-	<!-- When we click on the '=' button, the onclick() shows the sum results on the calculator screen. -->
-  <input type = "button" value = "=" onclick = "form1.answer.value = eval(form1.answer.value) ">
-  <br> 
-  <!-- Display the Cancel button and erase all data entered by the user. -->
-  <input type = "button" value = "Clear All" onclick = "form1.answer.value = ' ' " id= "clear" >
-  <br> 
-  
-</form>
-</div>
+
+<body>
+  <div class="app-container">
+
+    <!-- Toggle button for History Panel on mobile and Theme toggling -->
+    <header class="top-bar">
+      <div class="brand">Calc<span class="highlight">Sci</span></div>
+      <div class="controls">
+        <button id="theme-toggle" aria-label="Toggle dark/light theme" title="Toggle Theme">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path id="theme-icon-path"
+              d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z">
+            </path>
+          </svg>
+        </button>
+        <button id="history-toggle" aria-label="Toggle history panel" title="History (H)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path
+              d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z">
+            </path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="calculator-layout">
+
+      <section class="calculator-core">
+        <!-- Live Region for Screen Readers -->
+        <div id="sr-announcer" class="sr-only" aria-live="polite"></div>
+
+        <!-- Display Area -->
+        <div class="display-area">
+          <div class="display-indicators">
+            <span id="angle-indicator" class="active">DEG</span>
+            <span id="memory-indicator"></span>
+            <span id="loading-indicator" class="hidden">
+              <svg class="spinner" viewBox="0 0 50 50">
+                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+              </svg>
+            </span>
+          </div>
+          <div id="expression-display" class="expression-display" aria-hidden="true"></div>
+          <div id="main-display" class="main-display" role="textbox" aria-readonly="true"
+            aria-label="Calculator display" tabindex="0">0</div>
+        </div>
+
+        <!-- Controls: Settings like Decimals, Angle Mode, Memory -->
+        <div class="control-row">
+          <button class="ctrl-btn" data-action="angle" id="btn-angle"
+            aria-label="Toggle Degree or Radian Mode">DEG</button>
+          <select id="decimal-setting" class="ctrl-select" aria-label="Decimal places">
+            <option value="auto">Auto</option>
+            <option value="2">2 dec</option>
+            <option value="4">4 dec</option>
+            <option value="8">8 dec</option>
+          </select>
+          <button class="ctrl-btn" data-action="mc" aria-label="Memory Clear (Alt+M)">MC</button>
+          <button class="ctrl-btn" data-action="mr" aria-label="Memory Recall (Ctrl+M)">MR</button>
+          <button class="ctrl-btn" data-action="ms" aria-label="Memory Store (Shift+M)">MS</button>
+          <button class="ctrl-btn" data-action="m-plus" aria-label="Memory Add">M+</button>
+          <button class="ctrl-btn" data-action="m-minus" aria-label="Memory Subtract">M-</button>
+        </div>
+
+        <!-- Keypad -->
+        <div class="keypad">
+          <!-- Row 1 -->
+          <button class="key action ac" data-action="ac" aria-label="Clear All">C</button>
+          <button class="key action" data-action="backspace" aria-label="Backspace">&lt;-</button>
+          <button class="key op" data-insert="%" aria-label="percent">%</button>
+          <button class="key op" data-insert="/" aria-label="divide">/</button>
+          <button class="key sc" data-insert="√(" aria-label="square root">√</button>
+
+          <!-- Row 2 -->
+          <button class="key num" data-insert="7">7</button>
+          <button class="key num" data-insert="8">8</button>
+          <button class="key num" data-insert="9">9</button>
+          <button class="key op" data-insert="*" aria-label="multiply">*</button>
+          <button class="key sc" data-insert="^" aria-label="power">pow</button>
+
+          <!-- Row 3 -->
+          <button class="key num" data-insert="4">4</button>
+          <button class="key num" data-insert="5">5</button>
+          <button class="key num" data-insert="6">6</button>
+          <button class="key op" data-insert="-" aria-label="subtract">-</button>
+          <button class="key sc" data-insert="ln(" aria-label="natural log">ln</button>
+
+          <!-- Row 4 -->
+          <button class="key num" data-insert="1">1</button>
+          <button class="key num" data-insert="2">2</button>
+          <button class="key num" data-insert="3">3</button>
+          <button class="key op" data-insert="+" aria-label="add">+</button>
+          <div class="empty"></div>
+
+          <!-- Row 5 -->
+          <button class="key num" data-insert=".">.</button>
+          <button class="key num" data-insert="0">0</button>
+          <button class="key action eval" data-action="evaluate" aria-label="equals"
+            style="grid-column: span 2; background-color: #3bb3ff; color: white; font-weight: bold; border-color: #3bb3ff;">=</button>
+          <div class="empty"></div>
+        </div>
+      </section>
+
+      <!-- History Panel -->
+      <section class="history-panel" id="history-panel" aria-label="Calculation History">
+        <div class="history-header">
+          <h2>History</h2>
+          <button id="clear-history" class="btn-text" aria-label="Clear History">Clear</button>
+        </div>
+        <div id="history-list" class="history-list" aria-live="polite">
+          <!-- History items injected here -->
+          <div class="history-empty">No history yet</div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- PWA Install Prompt (optional wrapper for custom install flows) -->
+  <div id="install-toast" class="install-toast hidden">
+    <span>Install CalcSci for offline use</span>
+    <button id="btn-install">Install</button>
+    <button id="btn-dismiss-install" aria-label="Dismiss">✕</button>
+  </div>
+
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
 </body>
+
 </html>
